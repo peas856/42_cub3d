@@ -99,10 +99,17 @@ typedef struct	s_ray
 
 typedef struct	s_hit
 {
-	double			x;
-	double			y;
-	double			d;
+	int				h;
+	int				side;
 }				t_hit;
+
+typedef struct	s_draw
+{
+	int				tex_x;
+	int				line_h;
+	int				start;
+	int				end;
+}				t_drwa;
 
 typedef struct	s_all
 {
@@ -116,7 +123,11 @@ typedef struct	s_all
 	t_dir			dir;
 	t_ray			ray;
 	t_hit			hit;
+	t_drwa			drw;
 	int				*buf;
+	int				mapX;
+	int				mapY;
+	unsigned int	*tex_num;
 }				t_all;
 
 void			ft_init(char *cub);
@@ -151,7 +162,7 @@ int				ft_close(t_all *s, int win);
 void			ft_screen(t_all *s);
 void			ft_ray(t_all *s);
 void			ft_dir(t_all *s);
-void			ft_ver(t_all *s);
+void			ft_hit(t_all *s);
 void			ft_hor(t_all *s);
 
 void			ft_stock(t_all *s);

@@ -9,6 +9,8 @@ void	ft_ray(t_all *s)
 	double	dist;
 	double	cameraX;
 
+	s->mapX = (int)(s->pos.x);
+	s->mapY = (int)(s->pos.y);
 	cameraX = (2 * s->ray.i / (double)s->win.x) - 1;
 	angle = 33 * cameraX * M_PI / 180;
 	s->ray.x = s->dir.x * cos(angle) - s->dir.y * sin(angle);
@@ -20,114 +22,124 @@ void	ft_ray(t_all *s)
 
 void	ft_dir(t_all *s)
 {
-	double	mapX;
-	double	mapY;
-	
-	mapX = floor(s->pos.x);   // mapX, 플레이어의 현재 위치 편의상 정수로 나타내며 1씩 움직임
-	mapY = floor(s->pos.y);   // mapY, 플레이어의 현재 위치 편의상 정수로 나타내며 1씩 움직임
-
 	s->ray.deltadistX = fabs(1 / s->ray.x);
 	s->ray.deltadistY = fabs(1 / s->ray.y);
 	if (s->ray.x >= 0)
 	{
 		s->ray.stepX = 1;	
-		s->ray.sidedistX = (mapX + 1.0 - s->pos.x) * s->ray.deltadistX;
+		s->ray.sidedistX = (s->mapX + 1.0 - s->pos.x) * s->ray.deltadistX;
 	}
 	else
 	{
 		s->ray.stepX = -1;
-		s->ray.sidedistX = (s->pos.x - mapX) * s->ray.deltadistX;
+		s->ray.sidedistX = (s->pos.x - s->mapX) * s->ray.deltadistX;
 	}
 	if (s->ray.y >= 0)
 	{
 		s->ray.stepY = 1;
-		s->ray.sidedistY = (mapY + 1 - s->pos.y) * s->ray.deltadistY;
+		s->ray.sidedistY = (s->mapY + 1 - s->pos.y) * s->ray.deltadistY;
 	}	
 	else
 	{
 		s->ray.stepY = -1;
-		s->ray.sidedistY = (s->pos.y - mapY) * s->ray.deltadistY;
+		s->ray.sidedistY = (s->pos.y - s->mapY) * s->ray.deltadistY;
 	}
-		
 }
 
-void	ft_ver(t_all *s)
+void	ft_hit(t_all *s)
 {
-	double perpWallDist;
-	int hit;
-	int side;
-	int	mapX;
-	int	mapY;
-
-	hit = 0;
-	mapX = (int)(s->pos.x);   // mapX, 플레이어의 현재 위치 편의상 정수로 나타내며 1씩 움직임
-	mapY = (int)(s->pos.y);   // mapY, 플레이어의 현재 위치 편의상 정수로 나타내며 1씩 움직임
+	s->hit.h = 0;
 	for (int y = 0; y < s->win.y; y++)
 	{
 		s->buf[y] = s->tex.f; 
 		s->buf[s->win.y - y - 1] = s->tex.c;
 	}
-	while (hit == 0)
+	while (s->hit.h == 0)
 	{
 		if (s->ray.sidedistX < s->ray.sidedistY) // 기울기가 1보다 작을 때, x축으로 검사
 		{
 			s->ray.sidedistX += s->ray.deltadistX;
-			mapX += s->ray.stepX; // stepX 는 1, -1 중 하나.
-			side = 0; // x면에 부딪혔다면 side = 0
+			s->mapX += s->ray.stepX; // stepX 는 1, -1 중 하나.
+			s->hit.side = 0; // x면에 부딪혔다면 side = 0
 		}
 		else  // 기울기가 1보다 클 때, y축 기준으로 검사 
 		{
 			s->ray.sidedistY += s->ray.deltadistY;
-			mapY += s->ray.stepY; // stepY는 1, -1 중 하나.
-			side = 1; // y면에 부딪혔다면 side = 1
+			s->mapY += s->ray.stepY; // stepY는 1, -1 중 하나.
+			s->hit.side = 1; // y면에 부딪혔다면 side = 1
 		}
-		if (s->map.tab[mapY][mapX] == '1')
-			hit = 1;
+		if (s->map.tab[s->mapY][s->mapX] == '1')
+			s->hit.h = 1;
 	}
-	if (side == 0)
-		perpWallDist = (mapX - s->pos.x + (1 - s->ray.stepX) / 2) / s->ray.x;
+}
+
+void		ft_side(t_all *s)
+{
+	t_drwa drw;
+	double perpwalldist;
+	double wall_x;
+
+	if (s->hit.side == 0)
+		perpwalldist = (s->mapX - s->pos.x + (1 - s->ray.stepX) / 2) / s->ray.x;
 	else
-		perpWallDist = (mapY - s->pos.y + (1 - s->ray.stepY) / 2) / s->ray.y;
-	int lineHeight = (int)(s->win.y / perpWallDist);
-	int drawStart = (-lineHeight / 2) + (s->win.y / 2);
-	if (drawStart < 0)
-		drawStart = 0;
-	int drawEnd = (lineHeight / 2) + (s->win.y / 2);
-	if (drawEnd >= s->win.y)
-		drawEnd = s->win.y - 1;
-	unsigned int	*texNum;
-	if (side == 1) // y면에 부딪히면
+		perpwalldist = (s->mapY - s->pos.y + (1 - s->ray.stepY) / 2) / s->ray.y;
+	drw.line_h = (int)(s->win.y / perpwalldist);
+	drw.start = (-drw.line_h / 2) + (s->win.y / 2);
+	if (drw.start < 0)
+		drw.start = 0;
+	drw.end = (drw.line_h / 2) + (s->win.y / 2);
+	if (drw.end >= s->win.y)
+		drw.end = s->win.y - 1;
+	if (s->hit.side == 0)
+		wall_x = s->pos.y + perpwalldist * s->ray.y;
+	else
+		wall_x = s->pos.x + perpwalldist * s->ray.x;
+	wall_x -= floor(wall_x);
+	drw.tex_x = (int)(wall_x * (double)texWidth);
+	s->drw = drw;
+}
+
+void		ft_wall(t_all *s)
+{
+	s->tex_num = 0;
+	
+	if (s->hit.side == 1) // y면에 부딪히면
 	{
 		if (s->ray.y >= 0)
-			texNum = s->tex.n;
+			s->tex_num = s->tex.n;
 		else
-			texNum = s->tex.s;
+			s->tex_num = s->tex.s;
 	}
 	else
 	{
 		if (s->ray.x >= 0)
-			texNum = s->tex.w;
+			s->tex_num = s->tex.w;
 		else
-			texNum = s->tex.e;
+			s->tex_num = s->tex.e;
 	}
-	double wallX;
-	if (side == 0)
-		wallX = s->pos.y + perpWallDist * s->ray.y;
-	else
-		wallX = s->pos.x + perpWallDist * s->ray.x;
-	wallX -= floor(wallX);
-	int texX = (int)(wallX * (double)texWidth);
-	if (side == 0 && s->ray.x > 0)
-		texX = texWidth - texX - 1;
-	if (side == 1 && s->ray.y < 0)
-		texX = texWidth - texX - 1;
-	double step = 1.0 * texHeight / lineHeight;
-	double texPos = (drawStart - s->win.y / 2 + lineHeight / 2) * step;\
-	for (int i = drawStart; i < drawEnd; i++)
+	if (s->hit.side == 0 && s->ray.x > 0)
+		s->drw.tex_x = texWidth - s->drw.tex_x - 1;
+	if (s->hit.side == 1 && s->ray.y < 0)
+		s->drw.tex_x = texWidth - s->drw.tex_x - 1;
+	
+}
+void		ft_tex(t_all *s)
+{
+	double step;
+	double tex_pos;
+	int		i;
+	int		tex_y;
+
+	step = 1.0 * texHeight / s->drw.line_h;
+	tex_pos = (s->drw.start - s->win.y / 2 + s->drw.line_h / 2) * step;
+	i = s->drw.start;
+	tex_y = 0;
+	while(i < s->drw.end)
 	{
-		int texY = (int)texPos & (texHeight - 1);
-		texPos += step;
-		s->buf[i] = texNum[texHeight * texY + texX];
+		tex_y = (int)tex_pos & (texHeight - 1);
+		tex_pos += step;
+		s->buf[i] = s->tex_num[texHeight * tex_y + s->drw.tex_x];
+		i++;
 	}
 }
 
@@ -158,7 +170,10 @@ void	ft_screen(t_all *s)
 		s->buf = (int *)malloc(sizeof(int) * s->win.y);
 		ft_ray(s);
 		ft_dir(s);
-		ft_ver(s);
+		ft_hit(s);
+		ft_side(s);
+		ft_wall(s);
+		ft_tex(s);
 		imageDraw(s);
 		s->ray.i++;
 		free(s->buf);

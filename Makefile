@@ -4,47 +4,44 @@ CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 
-MLX_NAME = mlx
-MLX_DIR = ./mlx
-MLX = $(addprefix $(MLX_DIR)/, libmlx.a)
+MLX = mlx
 
-LXFLAGS = -framework OpenGL -framework AppKit
+LXFLAGS = -lmlx -framework OpenGL -framework AppKit
 
 HEADER = cub3d.h
 
-SRCS_DIR = ./src
+SRC = main \
+	parse \
+	parse_map \
+	parse_tools \
+	util_check \
+	gnl \
+	key \
+	screen \
+	util \
 
-SRCS_NAME = main.c \
-			parse.c \
-			parse_map.c \
-			parse_tools.c\
-			util.c \
-			gnl.c \
-			key.c \
-			screen.c \
-			util_check.c \
+FIL = $(addsuffix .c, $(addprefix src/, $(SRC)))
 
-SRC = $(addprefix $(SRCS_DIR)/, $(SRCS_NAME))
-
-OBJ = $(SRC:.c=.o)
+OBJ = $(FIL:.c=.o)
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(MAKE) -C $(MLX_DIR) all
-	$(CC) $(CFLAGS) -L$(MLX_DIR) -l$(MLX_NAME) $(LXFLAGS) $^ -o $@
-
-$(SRCS_DIR)/%.o: $(SRCS_DIR)/%.c
-	$(CC) $(CFLAGS) -I$(MLX_DIR) -c $< -o $@
+	@echo "\n\033[0;33mCompiling..."
+	$(CC) -o $(NAME) -L $(MLX) $(LXFLAGS) $(OBJ)
+	@echo "\033[0m"
 
 clean:
-	$(MAKE) -C $(MLX_DIR) clean
+	@echo "\033[0;31mCleaning..."
 	rm -rf $(OBJ)
+	@echo "\033[0m"
 
 fclean: clean
-	$(MAKE) -C $(MLX_DIR) fclean
+	@echo "\033[0;31mRemoving executable..."
 	rm -f $(NAME)
+	@echo "\033[0m"
 
 re: fclean all
+	

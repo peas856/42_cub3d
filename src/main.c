@@ -10,9 +10,8 @@ void	ft_draw(t_all *s)
 	ray.i = 0;
 	ray.stepX = 0;
 	ray.stepY = 0;
-	hit.x = 0;
-	hit.y = 0;
-	hit.d = 0;
+	hit.h = 0;
+	hit.side = 0;
 	s->ray = ray;
 	s->hit = hit;
 	ft_screen(s);
