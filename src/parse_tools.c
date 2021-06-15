@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_tools.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:17:26 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:34:29 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int		ft_res(t_all *s, char *line, int *i)
@@ -43,11 +55,9 @@ int		ft_pos(t_all *s)
 	char	c;
 	int		i;
 	int		j;
-	int		err;
 
 	i = -1;
 	j = -1;
-	err = -1;
 	while (++i < s->map.y)
 	{
 		while (++j < s->map.x)
@@ -61,12 +71,10 @@ int		ft_pos(t_all *s)
 				s->dir.x *= (c == 'W') ? -1 : 1;
 				s->dir.y = (c == 'S' || c == 'N') ? 1 : 0;
 				s->dir.y *= (c == 'N') ? -1 : 1;
-				err++;
+				s->err.pos++;
 			}
 		}
 		j = -1;
 	}
-	if (err)
-		return (-1);
 	return (1);
 }

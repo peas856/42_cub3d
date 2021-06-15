@@ -1,100 +1,99 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gnl.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:20:07 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:20:11 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-char	*error(char *stock)
+size_t				ft_strlen(const char *s)
 {
-	free(stock);
-	return (NULL);
+	size_t			len;
+
+	len = 0;
+	while (s[len])
+		len++;
+	return (len);
 }
 
-int		newline_check(char *stock, int read_size)
+size_t				ft_strlcpy(char *dst, const char *src, size_t n)
 {
-	int	i;
+	size_t			i;
 
-	i = 0;
-	if (stock == NULL)
+	if (!dst && !src)
 		return (0);
-	if (read_size == 0)
-		return (1);
-	while (stock[i] != '\0')
+	if (n == 0)
+		return (ft_strlen(src));
+	i = 0;
+	while (src[i] && i < n - 1)
 	{
-		if (stock[i] == '\n')
-			return (1);
+		dst[i] = src[i];
 		i++;
 	}
-	return (0);
+	dst[i] = '\0';
+	while (src[i])
+		i++;
+	return (i);
 }
 
-char	*buf_join(char *stock, char *buf)
+size_t				ft_strlcat(char *dst, const char *src, size_t n)
 {
-	int		i;
-	int		j;
-	char	*new;
+	size_t			i;
+	size_t			len_dst;
+	size_t			len_src;
 
 	i = 0;
-	j = 0;
-	while (stock != NULL && stock[i] != '\0')
-		i++;
-	while (buf[j] != '\0')
-		j++;
-	if (!(new = malloc(sizeof(char) * (i + j + 1))))
-		return (error(stock));
-	i = 0;
-	j = 0;
-	while (stock != NULL && stock[i] != '\0')
-		new[i++] = stock[j++];
-	j = 0;
-	while (buf[j] != '\0')
-		new[i++] = buf[j++];
-	new[i] = '\0';
-	if (stock != NULL)
-		free(stock);
-	return (new);
-}
-
-char	*stock_trim(char *stock)
-{
-	int		i;
-	int		j;
-	char	*trimmed;
-
-	i = 0;
-	j = 0;
-	while (stock[i] != '\n' && stock[i] != '\0')
-		i++;
-	while (stock[i++] != '\0')
-		j++;
-	if (!(trimmed = malloc(sizeof(char) * j + 1)))
-		return (error(stock));
-	i = 0;
-	j = 0;
-	while (stock[i] != '\n' && stock[i] != '\0')
-		i++;
-	if (stock[i] == '\0')
-		i--;
-	i++;
-	while (stock[i] != '\0')
-		trimmed[j++] = stock[i++];
-	trimmed[j] = '\0';
-	free(stock);
-	return (trimmed);
-}
-
-char	*get_line(char *stock)
-{
-	int		i;
-	char	*line;
-
-	i = 0;
-	while (stock[i] != '\n' && stock[i] != '\0')
-		i++;
-	if (!(line = malloc(sizeof(char) * i + 1)))
-		return (error(stock));
-	i = 0;
-	while (stock[i] != '\n' && stock[i] != '\0')
+	len_src = ft_strlen(src);
+	len_dst = ft_strlen(dst);
+	if (n <= len_dst)
+		return (len_src + n);
+	while (src[i] && i < n - len_dst - 1)
 	{
-		line[i] = stock[i];
+		dst[len_dst + i] = src[i];
 		i++;
 	}
-	line[i] = '\0';
-	return (line);
+	dst[len_dst + i] = '\0';
+	return (len_dst + len_src);
+}
+
+char				*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t			len1;
+	size_t			len2;
+	char			*ret;
+
+	if (!s1 || !s2)
+		return (0);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	if (!(ret = malloc(len1 + len2 + 1)))
+		return (0);
+	ft_strlcpy(ret, s1, len1 + 1);
+	ft_strlcat(ret, s2, len1 + len2 + 1);
+	return (ret);
+}
+
+char				*ft_strdup(const char *s1)
+{
+	char			*ret;
+	size_t			len;
+	size_t			i;
+
+	i = 0;
+	len = ft_strlen(s1);
+	if (!(ret = malloc(len + 1)))
+		return (0);
+	while (i < len)
+	{
+		ret[i] = s1[i];
+		i++;
+	}
+	ret[i] = '\0';
+	return (ret);
 }

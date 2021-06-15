@@ -1,13 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:20:17 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 19:02:32 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../mlx/mlx.h"
+# include "../minilibx/mlx.h"
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
 
 # define ESC 53
 # define W 13
@@ -20,8 +33,8 @@
 
 # define SPEED 30
 # define ANGLE 0.03
-# define texWidth 64
-# define texHeight 64
+# define TEXWIDTH 64
+# define TEXHEIGHT 64
 
 typedef struct	s_mlx
 {
@@ -45,6 +58,7 @@ typedef struct	s_err
 {
 	int				n;
 	int				m;
+	int				pos;
 }				t_err;
 
 typedef struct	s_map
@@ -82,8 +96,8 @@ typedef struct	s_ray
 	double			x;
 	double			y;
 	int				i;
-	double			stepX;
-	double			stepY;
+	double			stepx;
+	double			stepy;
 	double			deltadistx;
 	double			deltadisty;
 	double			sidedistx;
@@ -144,6 +158,7 @@ int				ft_colors(unsigned int *color, char *line, int *i);
 int				ft_res(t_all *s, char *line, int *i);
 
 int				ft_parcheck(t_all *s);
+int				val_check(t_all *s, int i, int j);
 int				ft_mapcheck(t_all *s);
 int				ft_filecheck(char *av, char *s);
 int				ft_strcmp(const char *s1, const char *s2);
@@ -158,20 +173,20 @@ void			ft_dir(t_all *s);
 void			ft_hit(t_all *s);
 
 void			ft_screen(t_all *s);
-void 			imagedraw(t_all *s);
+void			imagedraw(t_all *s);
 void			ft_tex(t_all *s);
 void			ft_wall(t_all *s);
 void			ft_side(t_all *s);
 
-char			*error(char *stock);
-int				newline_check(char *stock, int read_size);
-char			*buf_join(char *stock, char *buf);
-char			*stock_trim(char *stock);
-char			*get_line(char *stock);
+size_t			ft_strlen(const char *s);
+size_t			ft_strlcpy(char *dst, const char *src, size_t n);
+size_t			ft_strlcat(char *dst, const char *src, size_t n);
+char			*ft_strjoin(char const *s1, char const *s2);
+char			*ft_strdup(const char *s1);
 
+int				is_newline(char *buf);
 int				ft_atoi(char *line, int *i);
 int				ft_spaceskip(char *line, int *i);
 int				ft_strerror(int err);
-
 
 #endif

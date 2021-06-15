@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:34:50 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:39:46 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 int		ft_close(t_all *s, int win)
@@ -26,12 +38,12 @@ void	ft_move(t_all *s, double c, int dir)
 
 	orix = s->pos.x;
 	oriy = s->pos.y;
-	if (dir == 1 && (s->map.tab[(int)floor(s->pos.y)][(int)floor(s->pos.x)] != '1'))
+	if (dir == 1 && (s->map.tab[(int)floor(oriy)][(int)floor(orix)] != '1'))
 	{
 		s->pos.x += c * (s->dir.x * SPEED / 100);
 		s->pos.y += c * (s->dir.y * SPEED / 100);
 	}
-	else if (dir == 0 && (s->map.tab[(int)floor(s->pos.y)][(int)floor(s->pos.x)] != '1'))
+	else if (!dir && (s->map.tab[(int)floor(oriy)][(int)floor(orix)] != '1'))
 	{
 		s->pos.x -= c * (s->dir.y * SPEED / 100);
 		s->pos.y += c * (s->dir.x * SPEED / 100);

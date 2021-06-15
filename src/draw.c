@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   draw.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:35:10 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:41:20 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	ft_ray(t_all *s)
@@ -23,22 +35,22 @@ void	ft_dir(t_all *s)
 	s->ray.deltadisty = fabs(1 / s->ray.y);
 	if (s->ray.x >= 0)
 	{
-		s->ray.stepX = 1;	
+		s->ray.stepx = 1;
 		s->ray.sidedistx = (s->mapx + 1.0 - s->pos.x) * s->ray.deltadistx;
 	}
 	else
 	{
-		s->ray.stepX = -1;
+		s->ray.stepx = -1;
 		s->ray.sidedistx = (s->pos.x - s->mapx) * s->ray.deltadistx;
 	}
 	if (s->ray.y >= 0)
 	{
-		s->ray.stepY = 1;
+		s->ray.stepy = 1;
 		s->ray.sidedisty = (s->mapy + 1 - s->pos.y) * s->ray.deltadisty;
-	}	
+	}
 	else
 	{
-		s->ray.stepY = -1;
+		s->ray.stepy = -1;
 		s->ray.sidedisty = (s->pos.y - s->mapy) * s->ray.deltadisty;
 	}
 }
@@ -51,13 +63,13 @@ void	ft_hit(t_all *s)
 		if (s->ray.sidedistx < s->ray.sidedisty)
 		{
 			s->ray.sidedistx += s->ray.deltadistx;
-			s->mapx += s->ray.stepX;
+			s->mapx += s->ray.stepx;
 			s->hit.side = 0;
 		}
 		else
 		{
 			s->ray.sidedisty += s->ray.deltadisty;
-			s->mapy += s->ray.stepY;
+			s->mapy += s->ray.stepy;
 			s->hit.side = 1;
 		}
 		if (s->map.tab[s->mapy][s->mapx] == '1')

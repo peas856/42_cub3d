@@ -1,8 +1,77 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 17:54:19 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:34:34 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-int		ft_line(t_all *s, char *line)
+int					return_line(char **s, char **line, int len, int i)
 {
-	int		i;
+	char			*tmp;
+
+	if (i == -1)
+	{
+		*line = ft_strdup(*s);
+		free(*s);
+		*s = 0;
+		if (len == 0)
+			return (0);
+	}
+	else
+	{
+		(*s)[i] = '\0';
+		*line = ft_strdup(*s);
+		tmp = ft_strdup(*s + i + 1);
+		free(*s);
+		*s = tmp;
+		if ((*s)[0] == '\0')
+		{
+			free(*s);
+			*s = 0;
+		}
+	}
+	return (1);
+}
+
+int					get_next_line(int fd, char **line)
+{
+	char			buf[2];
+	int				len;
+	static char		*s[OPEN_MAX];
+	char			*tmp;
+
+	if (fd < 0 || !line)
+		return (-1);
+	while ((len = read(fd, buf, 1)) > 0)
+	{
+		buf[len] = '\0';
+		if (!s[fd])
+			s[fd] = ft_strdup("");
+		tmp = ft_strjoin(s[fd], buf);
+		free(s[fd]);
+		s[fd] = tmp;
+		if ((is_newline(s[fd])) > -1)
+			break ;
+	}
+	if (len < 0)
+		return (-1);
+	else if (len == 0 && (!s[fd]))
+		*line = ft_strdup("");
+	else
+		return (return_line(&s[fd], line, len, is_newline(s[fd])));
+	return (0);
+}
+
+int					ft_line(t_all *s, char *line)
+{
+	int				i;
 
 	i = 0;
 	if ((line[i] == '1' || line[i] == ' ' || s->err.m == 1) && line[i] != '\0')
@@ -21,45 +90,16 @@ int		ft_line(t_all *s, char *line)
 		s->err.n = ft_colors(&s->tex.f, line, &i);
 	else if (line[i] == 'C' && line[i + 1] == ' ')
 		s->err.n = ft_colors(&s->tex.c, line, &i);
-	if (ft_spaceskip(line, &i) && s->err.n == 0 && s->err.m == 1 &&line[i] != '\0')
+	if (ft_spaceskip(line, &i) && !s->err.n && s->err.m == 1 && line[i] != '\0')
 		return (ft_strerror(-10));
 	return (s->err.n < 0 ? ft_strerror(s->err.n) : 0);
 }
 
-int		get_next_line(int fd, char **line)
+int					ft_padding(t_all *s)
 {
-	int			read_size;
-	char		buf[4096];
-	static char	*stock = NULL;
-
-	if (line == NULL || fd < 0)
-		return (-3);
-	*line = NULL;
-	read_size = 1;
-	while (!(newline_check(stock, read_size)))
-	{
-		if ((read_size = read(fd, buf, 4095)) == -1)
-			return (-3);
-		buf[read_size] = '\0';
-		if ((stock = buf_join(stock, buf)) == NULL)
-			return (-3);
-	}
-	if ((*line = get_line(stock)) == NULL)
-		return (-3);
-	if (read_size == 0)
-		free(stock);
-	if (read_size == 0)
-		return (0);
-	if ((stock = stock_trim(stock)) == NULL)
-		return (-3);
-	return (1);
-}
-
-int		ft_padding(t_all *s)
-{
-	int i;
-	int j;
-	char	**tmp;
+	int				i;
+	int				j;
+	char			**tmp;
 
 	if (!(tmp = malloc(sizeof(char *) * (s->map.y + 1))))
 		return (-1);
@@ -69,10 +109,10 @@ int		ft_padding(t_all *s)
 		j = -1;
 		if (!(tmp[i] = malloc(sizeof(char) * (s->map.x + 1))))
 			return (-1);
-		while(s->map.tab[i][++j] != '\0')
+		while (s->map.tab[i][++j] != '\0')
 			tmp[i][j] = s->map.tab[i][j];
-		while(j <s->map.x)
-			tmp[i][j++] = '*'; 
+		while (j < s->map.x)
+			tmp[i][j++] = '*';
 		tmp[i][j] = '\0';
 		free(s->map.tab[i]);
 		i++;
@@ -83,11 +123,11 @@ int		ft_padding(t_all *s)
 	return (0);
 }
 
-int		ft_parse(t_all *s, char *cub)
+int					ft_parse(t_all *s, char *cub)
 {
-	char	*line;
-	int		fd;
-	int		ret;
+	char			*line;
+	int				fd;
+	int				ret;
 
 	ret = 1;
 	fd = open(cub, O_RDONLY);
@@ -104,7 +144,7 @@ int		ft_parse(t_all *s, char *cub)
 	ft_padding(s);
 	if (ret == -1 || ret == -3)
 		return (ft_strerror(ret + 1));
-	if (ft_pos(s) == -1)
+	if (ft_pos(s) == -1 || s->err.pos)
 		return (ft_strerror(-18));
 	return (ft_parcheck(s));
 }

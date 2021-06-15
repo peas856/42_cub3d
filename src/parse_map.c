@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_map.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:20:45 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:26:05 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-int		ft_xpm(t_all *s, unsigned int **adr, char *file)
+int				ft_xpm(t_all *s, unsigned int **adr, char *file)
 {
-	int		fd;
-	void	*img;
-	int		tab[5];
+	int			fd;
+	void		*img;
+	int			tab[5];
 
 	if (ft_filecheck(file, ".xpm") != 0)
 		return (-1);
@@ -19,10 +31,10 @@ int		ft_xpm(t_all *s, unsigned int **adr, char *file)
 	return (0);
 }
 
-int		ft_texture(t_all *s, unsigned int **adr, char *line, int *i)
+int				ft_texture(t_all *s, unsigned int **adr, char *line, int *i)
 {
-	char	*file;
-	int		j;
+	char		*file;
+	int			j;
 
 	if (*adr != NULL)
 		return (-7);
@@ -43,18 +55,19 @@ int		ft_texture(t_all *s, unsigned int **adr, char *line, int *i)
 	return (j == -1 ? -9 : 0);
 }
 
-int		ft_slablen(t_all *s, char *line)
+int				ft_slablen(t_all *s, char *line)
 {
-	int	i;
-	int	count;
+	int			i;
+	int			count;
 
 	i = 0;
 	count = 0;
 	while (line[i] != '\0')
-	{	
+	{
 		if (line[i] == '0' || line[i] == '1' || line[i] == ' ')
 			count++;
-		else if (line[i] == 'N' || line[i] == 'S' || line[i] == 'W' || line[i] == 'E')
+		else if (line[i] == 'N' || line[i] == 'S' || \
+		line[i] == 'W' || line[i] == 'E')
 			count++;
 		i++;
 	}
@@ -63,10 +76,10 @@ int		ft_slablen(t_all *s, char *line)
 	return (count);
 }
 
-char	*ft_slab(t_all *s, char *line, int *i)
+char			*ft_slab(t_all *s, char *line, int *i)
 {
-	char	*slab;
-	int		j;
+	char		*slab;
+	int			j;
 
 	if (!(slab = malloc(sizeof(char) * (ft_slablen(s, line) + 1))))
 		return (NULL);
@@ -89,10 +102,10 @@ char	*ft_slab(t_all *s, char *line, int *i)
 	return (slab);
 }
 
-int		ft_map(t_all *s, char *line, int *i)
+int				ft_map(t_all *s, char *line, int *i)
 {
-	char	**tmp;
-	int		j;
+	char		**tmp;
+	int			j;
 
 	s->err.m = 1;
 	if (!(tmp = malloc(sizeof(char *) * (s->map.y + 2))))

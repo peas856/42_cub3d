@@ -1,6 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   util.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:32:20 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:33:04 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-int		ft_spaceskip(char *line, int *i)
+int				is_newline(char *buf)
+{
+	int			i;
+
+	i = 0;
+	while (buf[i])
+	{
+		if (buf[i] == '\n')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+int				ft_spaceskip(char *line, int *i)
 {
 	while ((line[*i] == ' ' || line[*i] == '\t' || line[*i] == '\n')
 	|| (line[*i] == '\r' || line[*i] == '\v' || line[*i] == '\f'))
@@ -8,9 +34,9 @@ int		ft_spaceskip(char *line, int *i)
 	return (1);
 }
 
-int		ft_atoi(char *line, int *i)
+int				ft_atoi(char *line, int *i)
 {
-	int	num;
+	int			num;
 
 	num = 0;
 	ft_spaceskip(line, i);
@@ -22,7 +48,7 @@ int		ft_atoi(char *line, int *i)
 	return (num);
 }
 
-int		ft_strerror(int err)
+int				ft_strerror(int err)
 {
 	(err == -1) ? write(2, "Error : Can not open file\n", 26) : 0;
 	(err == -2) ? write(2, "Error : Gnl error\n", 18) : 0;

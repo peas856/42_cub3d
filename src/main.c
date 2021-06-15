@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: trhee <trhee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/15 18:19:52 by trhee             #+#    #+#             */
+/*   Updated: 2021/06/15 18:41:34 by trhee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	ft_draw(t_all *s)
@@ -8,8 +20,8 @@ void	ft_draw(t_all *s)
 	ray.x = 0;
 	ray.y = 0;
 	ray.i = 0;
-	ray.stepX = 0;
-	ray.stepY = 0;
+	ray.stepx = 0;
+	ray.stepy = 0;
 	hit.h = 0;
 	hit.side = 0;
 	s->ray = ray;
@@ -77,6 +89,7 @@ void	ft_init(char *cub)
 	win.y = 0;
 	err.n = 0;
 	err.m = 0;
+	err.pos = -1;
 	s.mlx = mlx;
 	s.win = win;
 	s.img = img;
@@ -86,7 +99,6 @@ void	ft_init(char *cub)
 
 int		main(int ac, char **av)
 {
-
 	if (ac == 2 && !ft_filecheck(av[1], ".cub"))
 		ft_init(av[1]);
 	else
