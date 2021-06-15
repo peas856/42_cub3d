@@ -23,7 +23,7 @@ int		ft_colors(unsigned int *color, char *line, int *i)
 	int	g;
 	int	b;
 
-	if (*color)
+	if (*color != NONE)
 		return (-5);
 	(*i)++;
 	r = ft_atoi(line, i);

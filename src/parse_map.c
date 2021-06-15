@@ -74,13 +74,10 @@ char	*ft_slab(t_all *s, char *line, int *i)
 	while (line[*i] != '\0')
 	{
 		if ((line[*i] == '0' || line[*i] == '1' || line[*i] == 'N')
-			|| (line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W') || line[*i] == ' ')
-		{
-			if (line[*i] == ' ')
-				slab[j++] = '*';
-			else
-				slab[j++] = line[*i];
-		}
+			|| (line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'))
+			slab[j++] = line[*i];
+		else if (line[*i] == ' ')
+			slab[j++] = '*';
 		else
 		{
 			free(slab);

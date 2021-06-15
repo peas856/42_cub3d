@@ -54,8 +54,8 @@ void	ft_declare(t_all s, char *cub)
 	tex.w = NULL;
 	map.x = 0;
 	map.y = 0;
-	tex.c = 0;
-	tex.f = 0;
+	tex.c = NONE;
+	tex.f = NONE;
 	s.map = map;
 	s.tex = tex;
 	ft_cubed(s, cub);

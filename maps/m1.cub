@@ -1,18 +1,17 @@
 R 641 481
-NO ./srcs/walls/greystone.xpm
-SO ./srcs/walls/redbrick.xpm
-WE ./srcs/walls/colorstone.xpm
-EA ./srcs/walls/mossy.xpm
+NO ./textures/brick.xpm
+SO ./textures/floor.xpm
+WE ./textures/eagle.xpm
+EA ./textures/door.xpm
 
-S ./srcs/items/pillar.xpm
 F 128, 43, 0
 C 0, 204, 153
 
  1111111111111
- 1200000000001
-111111111101111
+ 1000000000001
+11110000001111
 1000000000011
 100000S000001
 1000000000011
-1000012100001
+1000010100001
 1111111111111

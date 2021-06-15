@@ -66,35 +66,20 @@ int		ft_padding(t_all *s)
 	i = 0;
 	while (i < s->map.y)
 	{
-		j = 0;
+		j = -1;
 		if (!(tmp[i] = malloc(sizeof(char) * (s->map.x + 1))))
 			return (-1);
-		while (j < s->map.x)
-		{
-			if (s->map.tab[i][j] != '\0')
-			{
-				while(s->map.tab[i][j] != '\0')
-				{
-					tmp[i][j] = s->map.tab[i][j];
-					j++;
-				}
-			}
-			else
-			{
-				while(j <s->map.x)
-				{
-					tmp[i][j] = '*'; 
-					j++;
-				}
-			}
-		}
+		while(s->map.tab[i][++j] != '\0')
+			tmp[i][j] = s->map.tab[i][j];
+		while(j <s->map.x)
+			tmp[i][j++] = '*'; 
 		tmp[i][j] = '\0';
+		free(s->map.tab[i]);
 		i++;
 	}
-	tmp[i] = NULL;
 	free(s->map.tab);
+	tmp[i] = NULL;
 	s->map.tab = tmp;
-	// free(tmp);
 	return (0);
 }
 

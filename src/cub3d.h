@@ -9,16 +9,6 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define NONE 0xFF000000
-# define WHITE 0x00FFFFFF
-# define BLACK 0x00000000
-# define RED 0x00FF0000
-# define GREEN 0x0000FF00
-# define BLUE 0x000000FF
-# define MAGENTA 0x00FF00FF
-# define YELLOW 0x00FFFF00
-# define CYAN 0x0000FFFF
-
 # define ESC 53
 # define W 13
 # define A 0
@@ -26,9 +16,12 @@
 # define D 2
 # define LEFT 123
 # define RIGHT 124
+# define NONE 0xFF000000
 
 # define SPEED 30
 # define ANGLE 0.03
+# define texWidth 64
+# define texHeight 64
 
 typedef struct	s_mlx
 {
@@ -91,10 +84,10 @@ typedef struct	s_ray
 	int				i;
 	double			stepX;
 	double			stepY;
-	double			deltadistX;
-	double			deltadistY;
-	double			sidedistX;
-	double			sidedistY;
+	double			deltadistx;
+	double			deltadisty;
+	double			sidedistx;
+	double			sidedisty;
 }				t_ray;
 
 typedef struct	s_hit
@@ -125,8 +118,8 @@ typedef struct	s_all
 	t_hit			hit;
 	t_drwa			drw;
 	int				*buf;
-	int				mapX;
-	int				mapY;
+	int				mapx;
+	int				mapy;
 	unsigned int	*tex_num;
 }				t_all;
 
@@ -138,6 +131,7 @@ void			ft_draw(t_all *s);
 int				ft_parse(t_all *s, char *cub);
 int				get_next_line(int fd, char **line);
 int				ft_line(t_all *s, char *line);
+int				ft_padding(t_all *s);
 
 int				ft_map(t_all *s, char *line, int *i);
 char			*ft_slab(t_all *s, char *line, int *i);
@@ -159,16 +153,15 @@ void			ft_rotate(t_all *s, double c);
 void			ft_move(t_all *s, double c, int dir);
 int				ft_close(t_all *s, int win);
 
-void			ft_screen(t_all *s);
 void			ft_ray(t_all *s);
 void			ft_dir(t_all *s);
 void			ft_hit(t_all *s);
-void			ft_hor(t_all *s);
 
-void			ft_stock(t_all *s);
-int				ft_size(t_all *s);
-void			ft_column(t_all *s, int start);
-unsigned int	ft_pixel(t_all *s, double i);
+void			ft_screen(t_all *s);
+void 			imagedraw(t_all *s);
+void			ft_tex(t_all *s);
+void			ft_wall(t_all *s);
+void			ft_side(t_all *s);
 
 char			*error(char *stock);
 int				newline_check(char *stock, int read_size);
@@ -179,5 +172,6 @@ char			*get_line(char *stock);
 int				ft_atoi(char *line, int *i);
 int				ft_spaceskip(char *line, int *i);
 int				ft_strerror(int err);
+
 
 #endif

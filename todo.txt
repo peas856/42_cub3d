@@ -1,6 +1,5 @@
-1. map 폴러 정리, tex 폴더 정리, makefile 정리
-2. 놈 체크- ft_padding, ft_slab 글자수, 
-3. 기타 테스터기 해보기 
+1. makefile 정리
+3. 기타 테스터기 해보기
 4. 전체 흐름 다시보기
-5. gnl 체크, for문 -> while로 바꾸기
-6. leak 체크 
+5. gnl 체크
+6. leak 체크
